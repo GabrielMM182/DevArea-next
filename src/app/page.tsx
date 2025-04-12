@@ -81,7 +81,7 @@ export default function Home() {
           </CardHeader>
           <CardContent>
             <p>
-              Faça requisições HTTP, adicione headers customizados, visualize respostas
+              Faça requisições HTTP e GraphQL, adicione headers customizados, visualize respostas
               e valide schemas JSON.
             </p>
           </CardContent>

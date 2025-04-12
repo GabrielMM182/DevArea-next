@@ -4,29 +4,29 @@ import { useState } from 'react'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { RequestMethod } from '@/store/validatorApi'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { apiValidatorSchema } from '@/utils/validations'
+import { graphqlValidatorSchema } from '@/utils/validations'
 
-const httpMethods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'] as const
-
-interface RestFormProps {
+interface GraphQLFormProps {
   onSubmit: (data: {
     url: string
-    method: RequestMethod
     headers: { key: string; value: string }[]
-    body?: string
+    query: string
+    variables?: string
+    operationName?: string
   }) => void
   isLoading?: boolean
 }
 
-export function RestForm({ onSubmit, isLoading }: RestFormProps) {
+export function GraphQLForm({ onSubmit, isLoading }: GraphQLFormProps) {
   const [url, setUrl] = useState('')
-  const [method, setMethod] = useState<RequestMethod>('GET')
-  const [headers, setHeaders] = useState<{ key: string; value: string }[]>([])
-  const [body, setBody] = useState('')
+  const [headers, setHeaders] = useState<{ key: string; value: string }[]>([
+    { key: 'Content-Type', value: 'application/json' }
+  ])
+  const [query, setQuery] = useState('')
+  const [variables, setVariables] = useState('')
+  const [operationName, setOperationName] = useState('')
   const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,11 +37,17 @@ export function RestForm({ onSubmit, isLoading }: RestFormProps) {
       const urlSchema = z.string().url()
       urlSchema.parse(url)
 
+      if (!query.trim()) {
+        setError('A query GraphQL é obrigatória')
+        return
+      }
+
       onSubmit({
         url,
-        method,
         headers,
-        body: ['POST', 'PUT', 'PATCH'].includes(method) ? body : undefined
+        query,
+        variables: variables.trim() ? variables : undefined,
+        operationName: operationName.trim() ? operationName : undefined
       })
     } catch (err) {
       if (err instanceof z.ZodError) {
@@ -67,28 +73,16 @@ export function RestForm({ onSubmit, isLoading }: RestFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Nova Requisição REST</CardTitle>
+        <CardTitle>Nova Requisição GraphQL</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="flex gap-2">
-            <Select value={method} onValueChange={(v) => setMethod(v as RequestMethod)}>
-              <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Método" />
-              </SelectTrigger>
-              <SelectContent>
-                {httpMethods.map((method) => (
-                  <SelectItem key={method} value={method}>
-                    {method}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div>
             <Input
-              placeholder="URL da API"
+              placeholder="URL do Endpoint GraphQL"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              className="flex-1"
+              className="w-full"
             />
           </div>
 
@@ -123,17 +117,44 @@ export function RestForm({ onSubmit, isLoading }: RestFormProps) {
             ))}
           </div>
 
-          {['POST', 'PUT', 'PATCH'].includes(method) && (
-            <div className="space-y-2">
-              <h3 className="text-sm font-medium">Body</h3>
-              <Textarea
-                placeholder="JSON body"
-                value={body}
-                onChange={(e) => setBody(e.target.value)}
-                rows={5}
-              />
-            </div>
-          )}
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium">Query</h3>
+            <Textarea
+              placeholder={`query ExampleQuery {
+  user(id: "1") {
+    id
+    name
+    email
+  }
+}`}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              rows={8}
+              className="font-mono"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium">Variables (opcional)</h3>
+            <Textarea
+              placeholder={`{
+  "id": "1"
+}`}
+              value={variables}
+              onChange={(e) => setVariables(e.target.value)}
+              rows={4}
+              className="font-mono"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium">Nome da Operação (opcional)</h3>
+            <Input
+              placeholder="ExampleQuery"
+              value={operationName}
+              onChange={(e) => setOperationName(e.target.value)}
+            />
+          </div>
 
           {error && <p className="text-red-500 text-sm">{error}</p>}
 

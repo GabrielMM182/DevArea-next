@@ -63,4 +63,20 @@ export const apiValidatorSchema = z.object({
   path: ['body']
 });
 
-export type ApiValidatorRequest = z.infer<typeof apiValidatorSchema>; 
+export const graphqlValidatorSchema = z.object({
+  id: z.string().optional(),
+  url: z.string()
+    .url('URL inválida')
+    .min(1, 'URL não pode estar vazia'),
+  headers: z.array(z.object({
+    key: z.string().min(1, 'Nome do header é obrigatório'),
+    value: z.string().min(1, 'Valor do header é obrigatório')
+  })),
+  query: z.string().min(1, 'Query GraphQL é obrigatória'),
+  variables: z.string().optional(),
+  operationName: z.string().optional(),
+  createdAt: z.date().optional()
+});
+
+export type ApiValidatorRequest = z.infer<typeof apiValidatorSchema>;
+export type GraphQLValidatorRequest = z.infer<typeof graphqlValidatorSchema>; 
