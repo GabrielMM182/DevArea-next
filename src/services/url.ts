@@ -20,7 +20,6 @@ class UrlServiceImpl implements UrlService {
 
   async createShortUrl(url: string): Promise<CreateShortUrlResult> {
     if (!url) throw new Error('URL is required');
-    if (!this.isValidUrl(url)) throw new Error('Invalid URL format');
 
     const response = await fetch(`${this.baseUrl}/api/shorten`, {
       method: 'POST',
@@ -48,16 +47,6 @@ class UrlServiceImpl implements UrlService {
 
     const data = await response.json();
     return data.originalUrl || null;
-  }
-
-
-  private isValidUrl(url: string): boolean {
-    try {
-      new URL(url);
-      return true;
-    } catch {
-      return false;
-    }
   }
 }
 

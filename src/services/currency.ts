@@ -1,11 +1,13 @@
 export interface ExchangeRateResponse {
   result: string;
-  base_code: string;
-  conversion_rates: {
-    [key: string]: number;
-  };
+  documentation: string;
+  terms_of_use: string;
+  time_last_update_unix: number;
   time_last_update_utc: string;
+  time_next_update_unix: number;
   time_next_update_utc: string;
+  base_code: string;
+  conversion_rates: Record<string, number>;
 }
 
 export interface ConversionResult {
@@ -18,48 +20,48 @@ export interface ConversionResult {
   nextUpdate: string;
 }
 
-export async function getExchangeRate(from: string): Promise<ExchangeRateResponse> {
+/**
+ * Obtém as taxas de câmbio atualizadas para uma moeda base
+ */
+export async function getExchangeRate(currency: string): Promise<ExchangeRateResponse> {
   try {
-    // Usando Server-Side API Route para proteger a chave
-    const response = await fetch(`/api/exchange-rates/${from}`);
+    const response = await fetch(`/api/exchange-rates/${currency.toUpperCase()}`);
     
     if (!response.ok) {
-      if (response.status === 403) {
-        throw new Error('Chave da API inválida ou expirada');
-      }
-      throw new Error(`Erro ${response.status}: ${response.statusText}`);
+      throw new Error(`Erro ao obter taxas de câmbio: ${response.statusText}`);
     }
-
-    return response.json();
+    
+    return await response.json();
   } catch (error) {
-    console.error('Erro ao obter taxa de câmbio:', error);
-    throw new Error(
-      error instanceof Error 
-        ? error.message 
-        : 'Falha ao obter taxa de câmbio'
-    );
+    console.error('Falha ao obter taxas de câmbio:', error);
+    throw new Error('Não foi possível obter as taxas de câmbio. Tente novamente mais tarde.');
   }
 }
 
-export async function convertCurrency(
+/**
+ * Converte um valor de uma moeda para outra usando taxas de câmbio atualizadas
+ */
+export const convertCurrency = async (
   amount: number,
   from: string,
   to: string
-): Promise<ConversionResult> {
-  const exchangeData = await getExchangeRate(from);
-  const rate = exchangeData.conversion_rates[to];
-
-  if (!rate) {
-    throw new Error(`Taxa de câmbio não encontrada para ${to}`);
+): Promise<number> => {
+  try {
+    // Obter as taxas atualizadas da API
+    const exchangeData = await getExchangeRate(from);
+    const rate = exchangeData.conversion_rates[to.toUpperCase()];
+    
+    if (!rate) {
+      throw new Error(`Taxa de câmbio não encontrada para ${to}`);
+    }
+    
+    // Calcular o valor convertido
+    const result = amount * rate;
+    
+    // Retornar com 2 casas decimais
+    return Number(result.toFixed(2));
+  } catch (error) {
+    console.error('Erro na conversão:', error);
+    throw new Error('Erro ao converter moeda. Verifique as moedas selecionadas e tente novamente.');
   }
-
-  return {
-    amount,
-    from,
-    to,
-    result: amount * rate,
-    rate,
-    lastUpdate: exchangeData.time_last_update_utc,
-    nextUpdate: exchangeData.time_next_update_utc,
-  };
-} 
+}; 

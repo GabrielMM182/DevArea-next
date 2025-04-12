@@ -1,11 +1,12 @@
-import  generator  from 'generate-password';
+import generator from 'generate-password';
 import zxcvbn from 'zxcvbn';
 
-export interface PasswordOptions {
+export interface PasswordConfig {
   length: number;
-  numbers: boolean;
-  symbols: boolean;
-  uppercase: boolean;
+  includeNumbers: boolean;
+  includeSymbols: boolean;
+  includeUppercase: boolean;
+  includeLowercase: boolean;
 }
 
 export interface PasswordStrength {
@@ -16,15 +17,13 @@ export interface PasswordStrength {
   };
 }
 
-export const generateSecurePassword = (options: PasswordOptions): string => {
-  if (options.length < 4) {
-    throw new Error('O comprimento da senha deve ser de no mínimo 4 caracteres para garantir a segurança.');
-  }
+export const generatePassword = (config: PasswordConfig): string => {
   return generator.generate({
-    length: options.length,
-    numbers: options.numbers,
-    symbols: options.symbols,
-    uppercase: options.uppercase,
+    length: config.length,
+    numbers: config.includeNumbers,
+    symbols: config.includeSymbols,
+    uppercase: config.includeUppercase,
+    lowercase: config.includeLowercase,
     strict: true
   });
 };
