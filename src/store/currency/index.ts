@@ -20,7 +20,7 @@ export interface CurrencyState {
 
 export const useCurrencyStore = create<CurrencyState>()(
   devtools((set, get) => ({
-    amount: 1,
+    amount: 0,
     from: 'USD',
     to: 'BRL',
     result: null,
