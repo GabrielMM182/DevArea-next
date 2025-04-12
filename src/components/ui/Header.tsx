@@ -42,7 +42,7 @@ export function Header() {
             <span className="font-bold text-xl">DevArea</span>
           </Link>
         </div>
-        <nav className="flex items-center space-x-2 text-sm font-medium">
+        <nav className="flex items-center space-x-2 text-sm font-medium overflow-x-auto">
           <NavItem href="/password-generator" active={pathname === '/password-generator'}>
             Gerador de Senha
           </NavItem>
@@ -54,6 +54,9 @@ export function Header() {
           </NavItem>
           <NavItem href="/api-validator" active={pathname === '/api-validator'}>
             Validador de API
+          </NavItem>
+          <NavItem href="/readme-generator" active={pathname === '/readme-generator'}>
+            Gerador de README
           </NavItem>
         </nav>
       </div>

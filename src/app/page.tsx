@@ -12,7 +12,7 @@ export default function Home() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card>
           <CardHeader>
             <CardTitle>Gerador de Senha</CardTitle>
@@ -88,6 +88,26 @@ export default function Home() {
           <CardFooter>
             <Button asChild className="w-full">
               <Link href="/api-validator">Acessar</Link>
+            </Button>
+          </CardFooter>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Gerador de README</CardTitle>
+            <CardDescription>
+              Crie arquivos README.md para seus projetos facilmente
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p>
+              Gere READMEs profissionais preenchendo um formulário interativo com
+              informações como tecnologias, instalação, uso e contribuição.
+            </p>
+          </CardContent>
+          <CardFooter>
+            <Button asChild className="w-full">
+              <Link href="/readme-generator">Acessar</Link>
             </Button>
           </CardFooter>
         </Card>
