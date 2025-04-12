@@ -37,4 +37,30 @@ export const passwordSchema = z.object({
 }, {
   message: 'Selecione pelo menos um tipo de caractere',
   path: ['includeNumbers'],
-}); 
+});
+
+export const apiValidatorSchema = z.object({
+  id: z.string().optional(),
+  url: z.string()
+    .url('URL inválida')
+    .min(1, 'URL não pode estar vazia'),
+  method: z.enum(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], {
+    errorMap: () => ({ message: 'Método HTTP inválido' })
+  }),
+  headers: z.array(z.object({
+    key: z.string().min(1, 'Nome do header é obrigatório'),
+    value: z.string().min(1, 'Valor do header é obrigatório')
+  })),
+  body: z.string().optional(),
+  createdAt: z.date().optional()
+}).refine((data) => {
+  if (['POST', 'PUT', 'PATCH'].includes(data.method) && !data.body) {
+    return false;
+  }
+  return true;
+}, {
+  message: 'Body é obrigatório para métodos POST, PUT e PATCH',
+  path: ['body']
+});
+
+export type ApiValidatorRequest = z.infer<typeof apiValidatorSchema>; 

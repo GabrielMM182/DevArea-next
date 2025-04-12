@@ -1,5 +1,3 @@
-import { nanoid } from 'nanoid';
-
 export interface CreateShortUrlResult {
   shortCode: string;
   originalUrl: string;

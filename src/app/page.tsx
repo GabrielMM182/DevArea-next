@@ -12,7 +12,7 @@ export default function Home() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardHeader>
             <CardTitle>Gerador de Senha</CardTitle>
@@ -68,6 +68,26 @@ export default function Home() {
           <CardFooter>
             <Button asChild className="w-full">
               <Link href="/conversor">Acessar</Link>
+            </Button>
+          </CardFooter>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Validador de API</CardTitle>
+            <CardDescription>
+              Teste e valide suas APIs REST e GraphQL
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p>
+              Faça requisições HTTP, adicione headers customizados, visualize respostas
+              e valide schemas JSON.
+            </p>
+          </CardContent>
+          <CardFooter>
+            <Button asChild className="w-full">
+              <Link href="/api-validator">Acessar</Link>
             </Button>
           </CardFooter>
         </Card>

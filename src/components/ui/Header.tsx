@@ -52,6 +52,9 @@ export function Header() {
           <NavItem href="/conversor" active={pathname === '/conversor'}>
             Conversor de Moeda
           </NavItem>
+          <NavItem href="/api-validator" active={pathname === '/api-validator'}>
+            Validador de API
+          </NavItem>
         </nav>
       </div>
     </header>
