@@ -17,8 +17,8 @@ export interface PasswordStrength {
 }
 
 export const generateSecurePassword = (options: PasswordOptions): string => {
-  if (options.length < 8) {
-    throw new Error('O comprimento da senha deve ser de no mínimo 8 caracteres para garantir a segurança.');
+  if (options.length < 4) {
+    throw new Error('O comprimento da senha deve ser de no mínimo 4 caracteres para garantir a segurança.');
   }
   return generator.generate({
     length: options.length,

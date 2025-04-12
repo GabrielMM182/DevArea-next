@@ -55,7 +55,7 @@ export function PasswordGenerator() {
           <Input
             type="number"
             value={length}
-            min={8}
+            min={4}
             max={32}
             onChange={(e) => setLength(Number(e.target.value))}
             label="Length"

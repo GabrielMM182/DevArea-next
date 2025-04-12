@@ -1,0 +1,20 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Link {
+  id          String   @id @default(cuid())
+  originalUrl String
+  shortCode   String   @unique
+  createdAt   DateTime @default(now())
+  ownerId     String?  // Optional owner ID for future authentication
+
+  @@index([shortCode])
+}

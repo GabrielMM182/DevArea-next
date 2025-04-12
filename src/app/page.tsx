@@ -7,12 +7,20 @@ export default function Home() {
       <p className="text-lg mb-8 text-red-600">
         Bem-vindo ao template Next.js.
       </p>
-      <Link 
-        href="/password-generator" 
-        className="inline-block px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
-      >
-        Password Generator
-      </Link>
+      <div className="space-x-4">
+        <Link 
+          href="/password-generator" 
+          className="inline-block px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
+        >
+          Password Generator
+        </Link>
+        <Link 
+          href="/shorten" 
+          className="inline-block px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
+        >
+          Encurtador de URLs
+        </Link>
+      </div>
     </div>
   );
 }
